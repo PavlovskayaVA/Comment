@@ -62,6 +62,8 @@ button.addEventListener('click',addComment);
 function addComment() {
   const messege = document.querySelector('.message');
 
+  saveCountComment();
+
   let comment = {
       photo: userPhoto, 
       name:  userName,
@@ -74,15 +76,16 @@ function addComment() {
    comments.push(comment);
    saveComments();
    showComments();
-   saveCountComment();
+   
 }
 
 function saveCountComment() {
-    localStorage.setItem('countComments', JSON.stringify(numComment.innerHTML));  
+    localStorage.setItem('countComments', numComment.innerHTML);  
+    addCountComment()
 }
 
 function addCountComment() {
-    if (localStorage.getItem('countComments')) numComment.innerHTML = JSON.parse(localStorage.getItem('countComments'));
+    numComment.innerHTML = localStorage.getItem('countComments');
     numComment.innerHTML++;
 }
 
@@ -98,8 +101,6 @@ function loadComments() {
 }
 
 function showComments() {
-    addCountComment()
-
     const commentField = document.querySelector('.comment-field');
     let out = '';
     comments.forEach(function(item) {
@@ -128,6 +129,9 @@ function showComments() {
                 </div>`;
         
     })
+
+    
+
 
     commentField.innerHTML = out;
 
@@ -203,5 +207,8 @@ function showComments() {
 
 
 /*
+
+ */
+
 
  */
