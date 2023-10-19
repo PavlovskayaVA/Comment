@@ -132,10 +132,11 @@ body {
     
 }
 
-.person-avatar {
+.person-avatar, .photoComments {
     margin-right: 30px;
     width: 61px;
     height: 61px;
+    border-radius: 50%;
 }
 
 .person-messege {
@@ -174,6 +175,9 @@ body {
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
+.meesenge-answer {
+    width: 558px;
+}
 
 .button {
     height: 61px;
@@ -184,6 +188,10 @@ body {
     border-radius: 5px;
     margin-top: 37px;
     border: none;
+}
+
+.button-answer {
+    margin-left: 20px
 }
 
 .button:hover {
@@ -275,4 +283,11 @@ body {
 
 .ratingCommentsText {
     margin-right: 10px;
+}
+
+.answer {
+    display: none;
+    margin-left: 100px;
+    margin-bottom: 20px;
+    
 }
