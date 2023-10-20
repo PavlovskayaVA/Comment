@@ -2,7 +2,7 @@ let comments = [];
 let answers = [];
 
 let commentIndex = 0;
-let answerIndex = false; 
+let answerIndex = 'false'; 
 
 loadComments();
 
@@ -138,7 +138,7 @@ function showComments() {
                         <span class = 'nameComments'>${item.name}</span>
                         <span class = 'timeComments'>${timeConverter(item.time)}</span>
                         <p class = 'messegeComments'>${item.messege}</p>
-                        <div class = 'addComments'>
+                        <div class = 'addComments' data-contain = 'false'>
                             <span class = 'answerComments'>
                                 <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
                                 <span class = 'answerCommentsText' data-answerIndex="${answerIndex}">Ответить</span>
@@ -155,12 +155,13 @@ function showComments() {
                         </div>
                     </div>                 
                 </div>
-                <div class = "answer">1</div>`;
+                <div class = "answer"></div>`;
         
     })
 
     commentField.innerHTML = out;    
 }
+
 
 
 //__________________________
@@ -185,54 +186,38 @@ const answerButtons = document.querySelectorAll('.answerCommentsText')
 
 answerButtons.forEach(item => {
     item.addEventListener('click', () => {
-        item.style.color = 'blue';
-        answerIndex = true;
-        localStorage.setItem('indexAnswers', answerIndex); 
-        answerIndex = localStorage.getItem('indexAnswers');
-        alert(answerIndex)
+        item.style.color = 'red';
 
-            if (answerIndex == 'true') {
-                const answer = document.querySelector('.answer')
-                answer.style.display = "block";
+        const addComments = document.querySelector('.addComments')
+        addComments.dataset.contain = 'true';
+        console.log(addComments.dataset.contain)
+        addComments.forEach(e => {
+            if(e.dataset.contain == 'true') {
+                addComments.innerHTML = `<input></input>`
             }
+        })   
     })
-
-    //alert(answerIndex)
-/*
-
-*/    
-
+  
 })
+
+
 /*
-function ansIndex() {
-
-     if (localStorage.getItem('indexAnswers')) {
-            answerIndex = localStorage.getItem('indexAnswers');
-        } else {
-            localStorage.setItem('indexAnswers', answerIndex); 
-        }
-    
-        //compareIndex();
-        saveAnsIndex();
-        color();
-    }
-
-    function saveAnsIndex() {
-        localStorage.setItem('indexAnswers', answerIndex);  
-    }
-
+const addComments = document.querySelectorAll('.addComments')
+addComments.forEach(e => {
+    const answerButtons = document.querySelectorAll('.answerCommentsText')
+    answerButtons.forEach(item => { 
+        item.addEventListener('click', () => {
+           item.style.color = 'blue'; 
+           if (item.style.color == 'blue')  {
+                e.innerHTML = `<input></input>` 
+           }       
+        })
+    })
+})
 
 */
 
 /*
-function compareIndex() {
-    if(commentIndex == answerIndex) {
-        inputAnswers()
-    } else {
-        inputAnswers()
-    }
-}
-
 
 function inputAnswers() {
     let answerBlock = document.querySelector('.addComments');
