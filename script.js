@@ -1,14 +1,11 @@
 let comments = [];
-let answers = [];
 
 let commentIndex = 0;
-let answerIndex = 'false'; 
 
 loadComments();
 
 const body = document.querySelector('body');
 const button = document.querySelector('button');
-//button.style.background = "red";
 const name = document.querySelector('.name');
 const photo = document.querySelector('.person-avatar');
 const numComment = document.querySelector('.num-comment');
@@ -61,60 +58,23 @@ function generateUser() {
 
 let [userName, userPhoto] = generateUser();
 
-button.addEventListener('click',comIndex);
+button.addEventListener('click',addCommentIndex);
 
-function comIndex() {
-    if (localStorage.getItem('indexComments')) {
-    commentIndex = localStorage.getItem('indexComments');
+function addCommentIndex() {
+    if (localStorage.getItem('commentIndex')) {
+    commentIndex = localStorage.getItem('commentIndex');
     } else {
-        localStorage.setItem('indexComments', commentIndex); 
+        localStorage.setItem('commentIndex', commentIndex); 
     }
    
     addComment();
-    saveComIndex();
+    saveCommentIndex();
 }
 
-function saveComIndex() {
+function saveCommentIndex() {
     commentIndex ++;
-    localStorage.setItem('indexComments', commentIndex);   
+    localStorage.setItem('commentIndex', commentIndex);   
 }
-
-
-function addComment() {
-  const messege = document.querySelector('.message');
-
-  saveCountComment();
-
-  let comment = {
-      photo: userPhoto, 
-      name:  userName,
-      time: Math.floor(Date.now()/1000),
-      messege: messege.value,
-      commentIndex: commentIndex,
-      answerIndex: answerIndex,
-  }
-
-   messege.value = '';
-      
-   comments.push(comment);
-   saveComments();
-   showComments(); 
-   
-}
-
-
-if (localStorage.getItem('countComments')) {
-    numComment.innerHTML = localStorage.getItem('countComments');
-} else {
-    localStorage.setItem('countComments', numComment.innerHTML); 
-}
-
-
-function saveCountComment() {
-    numComment.innerHTML ++;
-    localStorage.setItem('countComments', numComment.innerHTML);     
-}
-
 
 function saveComments() {
     localStorage.setItem('comments', JSON.stringify(comments));    
@@ -127,21 +87,54 @@ function loadComments() {
     
 }
 
+function saveCountComment() {
+    numComment.innerHTML ++;
+    localStorage.setItem('countComments', numComment.innerHTML);     
+}
+
+if (localStorage.getItem('countComments')) {
+    numComment.innerHTML = localStorage.getItem('countComments');
+} else {
+    localStorage.setItem('countComments', numComment.innerHTML); 
+}
+
+function addComment() {
+  const messege = document.querySelector('.message');
+
+  saveCountComment();
+
+  let comment = {
+      photo: userPhoto, 
+      name:  userName,
+      time: Math.floor(Date.now()/1000),
+      messege: messege.value,
+      commentIndex: commentIndex
+  }
+
+   messege.value = '';
+      
+   comments.push(comment);
+   saveComments();
+   showComments(); 
+   
+}
+
+
 function showComments() {
     const commentField = document.querySelector('.comment-field');
     let out = '';
    
-    comments.forEach(function(item) {
-        out += `<div class = 'containerComments' data-commentIndex="${commentIndex}">
+    comments.forEach(function(item, commentIndex) {
+        out += `<div class = 'containerComments' data-index="${commentIndex}">
                     <img class = 'photoComments' src="${item.photo}" width = "50px" height = "50px"></img>
                     <div class = 'infoComments'>
                         <span class = 'nameComments'>${item.name}</span>
                         <span class = 'timeComments'>${timeConverter(item.time)}</span>
                         <p class = 'messegeComments'>${item.messege}</p>
-                        <div class = 'addComments' data-contain = 'false'>
+                        <div class = 'addComments' data-index="${commentIndex}">
                             <span class = 'answerComments'>
                                 <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
-                                <span class = 'answerCommentsText' data-answerIndex="${answerIndex}">Ответить</span>
+                                <span class = 'answerCommentsText' data-index="${commentIndex}">Ответить</span>
                             </span>
                             <span class = 'favoritesComments'>
                                 <img src="./img/in_favorite.svg" class = 'favoritesCommentsImg'></img>
@@ -159,46 +152,17 @@ function showComments() {
         
     })
 
-    commentField.innerHTML = out;    
+    commentField.innerHTML = out;   
+
+    const answerButtons = document.querySelectorAll('.answerCommentsText')
+
+    answerButtons.forEach(item => {
+        item.addEventListener('click', () => {
+            const indexAnswer = event.target.dataset.index;
+            document.querySelector(`.addComments[data-index="${indexAnswer}"]`).innerHTML = `input type = "text value = "123"/>`
+        })
+    })  
 }
-
-
-
-//__________________________
-/*
-function ansIndex() {
-    if (localStorage.getItem('indexAnswers')) {
-    answerIndex = localStorage.getItem('indexAnswers');
-    } else {
-        localStorage.setItem('indexAnswers', answerIndex); 
-    }
-   
-    saveAnsIndex();
-}
-
-function saveAnsIndex() {
-    answerIndex ++;
-    localStorage.setItem('indexAnswers', answerIndex);   
-}
-*/
-
-const answerButtons = document.querySelectorAll('.answerCommentsText')
-
-answerButtons.forEach(item => {
-    item.addEventListener('click', () => {
-        item.style.color = 'red';
-
-        const addComments = document.querySelector('.addComments')
-        addComments.dataset.contain = 'true';
-        console.log(addComments.dataset.contain)
-        addComments.forEach(e => {
-            if(e.dataset.contain == 'true') {
-                addComments.innerHTML = `<input></input>`
-            }
-        })   
-    })
-  
-})
 
 
 /*
