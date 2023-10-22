@@ -1,8 +1,10 @@
 let comments = [];
+let answers = [];
 
 let commentIndex = 0;
 
 loadComments();
+loadAnswers();
 
 const body = document.querySelector('body');
 const button = document.querySelector('button');
@@ -31,29 +33,34 @@ function timeConverter(UNIX_timestamp) {
     return time;
 }
 
-
 function generateUser() {
     let users = [
-      { id: 0, name: 'Имя 1', avatar: 'https://images.unsplash.com/photo-1508185159346-bb1c5e93ebb4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=55cf14db6ed80a0410e229368963e9d8&auto=format&fit=crop&w=1900&q=80'},
-      { id: 1, name: 'Имя 2', avatar: 'https://images.unsplash.com/photo-1495480393121-409eb65c7fbe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=05ea43dbe96aba57d48b792c93752068&auto=format&fit=crop&w=1351&q=80'},
-      { id: 2, name: 'Имя 3', avatar: 'https://images.unsplash.com/photo-1501611724492-c09bebdba1ac?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=ebdb0480ffed49bd075fd85c54dd3317&auto=format&fit=crop&w=1491&q=80'},
-      { id: 3, name: 'Имя 4', avatar: 'https://images.unsplash.com/photo-1417106338293-88a3c25ea0be?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=d1565ecb73a2b38784db60c3b68ab3b8&auto=format&fit=crop&w=1352&q=80'},
-      { id: 4, name: 'Имя 5', avatar: 'https://images.unsplash.com/photo-1500520198921-6d4704f98092?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=ac4bc726064d0be43ba92476ccae1a75&auto=format&fit=crop&w=1225&q=80'},
-      { id: 5, name: 'Имя 6', avatar: 'https://images.unsplash.com/photo-1504966981333-1ac8809be1ca?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9a1325446cbf9b56f6ee549623a50696&auto=format&fit=crop&w=1350&q=80'},
-      { id: 6, name: 'Имя 7', avatar: 'https://images.unsplash.com/photo-1437075130536-230e17c888b5?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=ff573beba18e5bf45eb0cccaa2c862b3&auto=format&fit=crop&w=1350&q=80'},
-      { id: 7, name: 'Имя 8', avatar: 'https://images.unsplash.com/photo-1515002246390-7bf7e8f87b54?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=1eac0f70640261e09152340f13b79144&auto=format&fit=crop&w=1350&q=80'},
-      { id: 8, name: 'Имя 9', avatar: 'https://images.unsplash.com/photo-1506057278219-795838d4c2dd?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=f68d8d7b0223cd906ea8cac13421881d&auto=format&fit=crop&w=1350&q=80'},
+        { id: 0, name: 'Boba', avatar: './img/avatars/boba.png' },
+        { id: 1, name: 'R2D2', avatar: './img/avatars/r2d2.png' },
+        { id: 2, name: 'Mando', avatar: './img/avatars/mando.png' },
+        { id: 3, name: 'Grogu', avatar: './img/avatars/grogu.png' },
+        { id: 4, name: 'Wader', avatar: './img/avatars/wader.png' },
+        { id: 5, name: 'Padme', avatar: './imgavatars/padme.png' },
+        { id: 6, name: 'Rey', avatar: './img/avatars/rey.png' },
+        { id: 7, name: 'Chewbacca', avatar: './img/avatars/chewbacca.png' },
+        { id: 8, name: 'Trooper', avatar: './img/avatars/trooper.png' },
+        { id: 9, name: 'Luke', avatar: './img/avatars/luke.png' },
+        { id: 10, name: 'Solo', avatar: './img/avatars/solo.png' },
+        { id: 11, name: 'Obi-Wan', avatar: './img/avatars/obi-wan.png' },
+        { id: 12, name: 'Palapatin', avatar: './img/avatars/palapatin.png' },
+        { id: 13, name: 'Ewok', avatar: './img/avatars/ewok.png' },
+        { id: 14, name: 'Jawas', avatar: './img/avatars/jawas.png' },
+        { id: 15, name: 'Dart Mol', avatar: './img/avatars/dart-mol.png' }
     ];
   
     let index = Math.floor(Math.random() * users.length);
 
     name.innerHTML = `${users[index].name}`;
     photo.src = `${users[index].avatar}`;
+    let userName = `${users[index].name}`;
+    let userPhoto = `${users[index].avatar}`;
 
-   let userName = name.innerHTML;
-   let userPhoto = photo.src;
-
-  return [userName, userPhoto]
+    return [userName, userPhoto]
 }
 
 let [userName, userPhoto] = generateUser();
@@ -71,6 +78,31 @@ function addCommentIndex() {
     saveCommentIndex();
 }
 
+
+function addComment() {
+    const message = document.querySelector('.message');
+  
+    saveCountComment();
+  
+    let comment = {
+        photo: userPhoto, 
+        name:  userName,
+        time: Math.floor(Date.now()/1000),
+        message: message.value,
+    }
+  
+     message.value = '';
+        
+     comments.push(comment);
+     saveComments();
+     showComments(); 
+}
+
+function saveCountComment() {
+    numComment.innerHTML ++;
+    localStorage.setItem('countComments', numComment.innerHTML);     
+}
+
 function saveCommentIndex() {
     commentIndex ++;
     localStorage.setItem('commentIndex', commentIndex);   
@@ -83,14 +115,20 @@ function saveComments() {
 function loadComments() {
     if (localStorage.getItem('comments')) comments = JSON.parse(localStorage.getItem('comments'));
 
-    showComments();
-    
+    showComments(); 
 }
 
-function saveCountComment() {
-    numComment.innerHTML ++;
-    localStorage.setItem('countComments', numComment.innerHTML);     
+function saveAnswers() {
+    localStorage.setItem('answers', JSON.stringify(answers)); 
 }
+
+function loadAnswers() {
+    if (localStorage.getItem('answers')) answers = JSON.parse(localStorage.getItem('answers'));
+
+    //showAnswers(); 
+}
+
+
 
 if (localStorage.getItem('countComments')) {
     numComment.innerHTML = localStorage.getItem('countComments');
@@ -98,39 +136,19 @@ if (localStorage.getItem('countComments')) {
     localStorage.setItem('countComments', numComment.innerHTML); 
 }
 
-function addComment() {
-  const messege = document.querySelector('.message');
-
-  saveCountComment();
-
-  let comment = {
-      photo: userPhoto, 
-      name:  userName,
-      time: Math.floor(Date.now()/1000),
-      messege: messege.value,
-      commentIndex: commentIndex
-  }
-
-   messege.value = '';
-      
-   comments.push(comment);
-   saveComments();
-   showComments(); 
-   
-}
 
 
 function showComments() {
     const commentField = document.querySelector('.comment-field');
-    let out = '';
+    let outComment = '';
    
     comments.forEach(function(item, commentIndex) {
-        out += `<div class = 'containerComments' data-index="${commentIndex}">
+        outComment += `<div class = 'containerComments' data-index="${commentIndex}">
                     <img class = 'photoComments' src="${item.photo}" width = "50px" height = "50px"></img>
                     <div class = 'infoComments'>
-                        <span class = 'nameComments'>${item.name}</span>
+                        <span class = 'nameComments' data-index="${commentIndex}">${item.name}</span>
                         <span class = 'timeComments'>${timeConverter(item.time)}</span>
-                        <p class = 'messegeComments'>${item.messege}</p>
+                        <p class = 'messegeComments'>${item.message}</p>
                         <div class = 'addComments' data-index="${commentIndex}">
                             <span class = 'answerComments'>
                                 <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
@@ -148,110 +166,94 @@ function showComments() {
                         </div>
                     </div>                 
                 </div>
-                <div class = "answer"></div>`;
-        
+                `;  
     })
 
-    commentField.innerHTML = out;   
+    commentField.innerHTML = outComment;   
 
     const answerButtons = document.querySelectorAll('.answerCommentsText')
 
     answerButtons.forEach(item => {
         item.addEventListener('click', () => {
             const indexAnswer = event.target.dataset.index;
-            document.querySelector(`.addComments[data-index="${indexAnswer}"]`).innerHTML = `input type = "text value = "123"/>`
-        })
-    })  
-}
+            let outInput = '';
 
-
-/*
-const addComments = document.querySelectorAll('.addComments')
-addComments.forEach(e => {
-    const answerButtons = document.querySelectorAll('.answerCommentsText')
-    answerButtons.forEach(item => { 
-        item.addEventListener('click', () => {
-           item.style.color = 'blue'; 
-           if (item.style.color == 'blue')  {
-                e.innerHTML = `<input></input>` 
-           }       
-        })
-    })
-})
-
-*/
-
-/*
-
-function inputAnswers() {
-    let answerBlock = document.querySelector('.addComments');
-    let out2 = '';
-        out2 = `<input class="message"></input>
-        <button class="button button-answer">Отправить</button>`
-    answerBlock.innerHTML = out2;  
-
-    //const buttonAnswer = document.querySelector('.button-answer')
-    //buttonAnswer.addEventListener('click', showAnswers);
-}
- */
-
-/*
-
-function showAnswers() {
-
-    let answerBlock = document.querySelector('.addComments')
-        //addAnswer();
-        let out2 = '';
-        
-        answers.forEach(function(item) {
-            out2 = `<div class="comment-person">
-                        <img alt="person-avatar" class="person-avatar" src="${item.photo}" width = "50px" height = "50px"></img>
+            outInput += `<div class="comment-person comment-person-answer">
+                        <img alt="person-avatar" class="person-avatar photo-answer" src="${userPhoto}" ></img>
                         <div class="person-messege">
                             <div class="name-symbol">
-                                <div class="name">${item.name}</div>       
+                                <div class="name name-answer">${userName}</div>
                             </div>
-                            <p class = 'messegeAnswers'>${item.messege}</p>
+                            <input class="message message-answer" placeholder="Введите текст сообщения...">
+                            </input>
                         </div>
                         <button class="button button-answer">Отправить</button>
-                    </div>`;
-                
-        })
+                        </div>
+                        <div class = "primer"></div>
+                        `
+            let addAnswers = document.querySelector(`.addComments[data-index="${indexAnswer}"]`)
+
+            addAnswers.innerHTML = outInput; 
+            const buttonAnswer = document.querySelectorAll('.button-answer')
+
+            buttonAnswer.forEach(e => {
+                e.addEventListener("click", () => {
+                    const messageAnswer = document.querySelector('.message-answer')
+
+                    let answer = {
+                        photoAnswer: userPhoto, 
+                        nameAnswer:  userName,
+                        timeAnswer: Math.floor(Date.now()/1000),
+                        messageAnswer: messageAnswer.value,
+                    }
+
+                     answers.push(answer);
+                     saveAnswers();
+                     showAnswers();                     
+                })
+            })   
+            
+            
+            
+            function showAnswers() {
+                answers.forEach(function(item, commentIndex) {
+                    let namePersonAnswer = document.querySelector(`.nameComments[data-index="${indexAnswer}"]`)
+                    outAnswer = ''
+                    outAnswer += `<div class = 'containerComments' data-index="${commentIndex}">
+                                <img class = 'photoComments' src="${item.photoAnswer}" width = "50px" height = "50px"></img>
+                                <div class = 'infoComments'>
+                                    <span class = 'nameComments'>${item.nameAnswer}</span>
+                                    <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
+                                    <span class = 'nameAnswer'>${namePersonAnswer.innerHTML}</span>
+                                    <span class = 'timeComments'>${timeConverter(item.timeAnswer)}</span>
+                                    <p class = 'messegeComments'>${item.messageAnswer}</p>
+                                    <div class = 'addComments' data-index="${commentIndex}">
+                                        <span class = 'favoritesComments'>
+                                            <img src="./img/in_favorite.svg" class = 'favoritesCommentsImg'></img>
+                                            <span class = 'favoritesCommentsText'>В избранное</span>
+                                        </span>
+                                        <span class = 'ratingComments'>
+                                            <img src="./img/minus.svg" class = 'ratingCommentsImg'></img>
+                                            <span class = 'ratingCommentsText'>0</span>
+                                            <img src="./img/plus.svg" class = 'ratingCommentsImg'></img>
+                                        </span>
+                                    </div>
+                                </div>                 
+                            </div>
+                            <div class = "answer"></div>`;
+
+                    addAnswers.innerHTML = outAnswer; 
+                            
+                })
+
+            }
+        }) 
         
-        answerBlock.innerHTML = out2;
-    
-    alert('fffffff')
-}
+    })
 
-const messegeAnswers = document.querySelector('.messegeAnswers')
-messegeAnswers.setAttribute("style", "color:orange;"); 
-
-function addAnswer() {
-
-  let answer = {
-      photo: userPhoto, 
-      name:  userName,
-      time: Math.floor(Date.now()/1000),
-      messege: messegeAnswers.value,
-  }
-  alert('y')
-   //messegeAnswers.value = '';
-      
-   answers.push(answer);
-   saveAnswers();
-   showAnswers();  
-}
-
-
-
-function saveAnswers() {
-    localStorage.setItem('answers', JSON.stringify(answers));
-}
-
-function loadAnswers() {
-    if (localStorage.getItem('answers')) answers = JSON.parse(localStorage.getItem('answers'));
-
-    showAnswers();
     
 }
 
-*/
+
+
+
