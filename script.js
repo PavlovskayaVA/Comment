@@ -4,7 +4,6 @@ let answers = [];
 let commentIndex = 0;
 
 loadComments();
-loadAnswers();
 
 const body = document.querySelector('body');
 const button = document.querySelector('button');
