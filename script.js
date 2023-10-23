@@ -118,24 +118,11 @@ function loadComments() {
     showComments(); 
 }
 
-function saveAnswers() {
-    localStorage.setItem('answers', JSON.stringify(answers)); 
-}
-
-function loadAnswers() {
-    if (localStorage.getItem('answers')) answers = JSON.parse(localStorage.getItem('answers'));
-
-    //showAnswers(); 
-}
-
-
-
 if (localStorage.getItem('countComments')) {
     numComment.innerHTML = localStorage.getItem('countComments');
 } else {
     localStorage.setItem('countComments', numComment.innerHTML); 
 }
-
 
 
 function showComments() {
@@ -207,8 +194,8 @@ function showComments() {
                         messageAnswer: messageAnswer.value,
                     }
 
-                     answers.push(answer);
-                     saveAnswers();
+                     comments.push(answer);
+                     saveComments();
                      showAnswers();                     
                 })
             })   
@@ -216,7 +203,7 @@ function showComments() {
             
             
             function showAnswers() {
-                answers.forEach(function(item, commentIndex) {
+                comments.forEach(function(item, commentIndex) {
                     let namePersonAnswer = document.querySelector(`.nameComments[data-index="${indexAnswer}"]`)
                     outAnswer = ''
                     outAnswer += `<div class = 'containerComments' data-index="${commentIndex}">
@@ -253,7 +240,5 @@ function showComments() {
 
     
 }
-
-
 
 
