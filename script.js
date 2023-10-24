@@ -1,5 +1,4 @@
 let comments = [];
-let answers = [];
 
 let commentIndex = 0;
 
@@ -61,7 +60,6 @@ function generateUser() {
 
     return [userName, userPhoto]
 }
-
 let [userName, userPhoto] = generateUser();
 
 button.addEventListener('click',addCommentIndex);
@@ -88,6 +86,7 @@ function addComment() {
         name:  userName,
         time: Math.floor(Date.now()/1000),
         message: message.value,
+        answers: []
     }
   
      message.value = '';
@@ -123,19 +122,48 @@ if (localStorage.getItem('countComments')) {
     localStorage.setItem('countComments', numComment.innerHTML); 
 }
 
+function showAnswers(answers, name) {
+    let addAnswersHTML = ''
+    answers.forEach(function(answer, commentIndex) {
+        addAnswersHTML += `<div class = 'containerComments' data-index="${commentIndex}">
+                                <img class = 'photoComments' src="${answer.photoAnswer}" width = "50px" height = "50px"></img>
+                                <div class = 'infoComments'>
+                                    <span class = 'nameComments'>${answer.nameAnswer}</span>
+                                    <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
+                                    <span class = 'nameAnswer'>${name}</span>
+                                    <span class = 'timeComments'>${timeConverter(answer.timeAnswer)}</span>
+                                    <p class = 'messegeComments'>${answer.messageAnswer}</p>
+                                    <div class = 'eventsAnswer' data-index="${commentIndex}">
+                                        <span class = 'favoritesComments'>
+                                            <img src="./img/in_favorite.svg" class = 'favoritesCommentsImg'></img>
+                                            <span class = 'favoritesCommentsText'>В избранное</span>
+                                        </span>
+                                        <span class = 'ratingComments'>
+                                            <img src="./img/minus.svg" class = 'ratingCommentsImg'></img>
+                                            <span class = 'ratingCommentsText'>0</span>
+                                            <img src="./img/plus.svg" class = 'ratingCommentsImg'></img>
+                                        </span>
+                                    </div>
+                                </div>                 
+                            </div>
+                    `;          
+    })
+    return addAnswersHTML
+}
 
 function showComments() {
     const commentField = document.querySelector('.comment-field');
-    let outComment = '';
+    let addCommentsHTML = ''
    
-    comments.forEach(function(item, commentIndex) {
-        outComment += `<div class = 'containerComments' data-index="${commentIndex}">
-                    <img class = 'photoComments' src="${item.photo}" width = "50px" height = "50px"></img>
+    comments.forEach(function(comment, commentIndex) {
+        addCommentsHTML += `<div class = 'containerComments' data-index="${commentIndex}">
+                    <img class = 'photoComments' src="${comment.photo}" width = "50px" height = "50px"></img>
                     <div class = 'infoComments'>
-                        <span class = 'nameComments' data-index="${commentIndex}">${item.name}</span>
-                        <span class = 'timeComments'>${timeConverter(item.time)}</span>
-                        <p class = 'messegeComments'>${item.message}</p>
-                        <div class = 'addComments' data-index="${commentIndex}">
+                        <span class = 'nameComments' data-index="${commentIndex}">${comment.name}</span>
+                        <span class = 'timeComments'>${timeConverter(comment.time)}</span>
+                        <p class = 'messegeComments'>${comment.message}</p>
+                        <div class = 'eventsComments' data-index="${commentIndex}">${showAnswers(comment.answers, comment.name)}
+                            <div class = "userAnswer" data-index="${commentIndex}"></div>
                             <span class = 'answerComments'>
                                 <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
                                 <span class = 'answerCommentsText' data-index="${commentIndex}">Ответить</span>
@@ -155,16 +183,16 @@ function showComments() {
                 `;  
     })
 
-    commentField.innerHTML = outComment;   
+    commentField.innerHTML = addCommentsHTML;   
 
     const answerButtons = document.querySelectorAll('.answerCommentsText')
 
-    answerButtons.forEach(item => {
-        item.addEventListener('click', () => {
+    answerButtons.forEach(button => {
+        button.addEventListener('click', () => {
             const indexAnswer = event.target.dataset.index;
-            let outInput = '';
+            let addInputsHTML = '';
 
-            outInput += `<div class="comment-person comment-person-answer">
+            addInputsHTML += `<div class="comment-person comment-person-answer">
                         <img alt="person-avatar" class="person-avatar photo-answer" src="${userPhoto}" ></img>
                         <div class="person-messege">
                             <div class="name-symbol">
@@ -177,13 +205,14 @@ function showComments() {
                         </div>
                         <div class = "primer"></div>
                         `
-            let addAnswers = document.querySelector(`.addComments[data-index="${indexAnswer}"]`)
+            let addAnswers = document.querySelector(`.userAnswer[data-index="${indexAnswer}"]`)
 
-            addAnswers.innerHTML = outInput; 
+            addAnswers.innerHTML = addInputsHTML; 
+
             const buttonAnswer = document.querySelectorAll('.button-answer')
 
-            buttonAnswer.forEach(e => {
-                e.addEventListener("click", () => {
+            buttonAnswer.forEach(button => {
+                button.addEventListener("click", () => {
                     const messageAnswer = document.querySelector('.message-answer')
 
                     let answer = {
@@ -193,51 +222,15 @@ function showComments() {
                         messageAnswer: messageAnswer.value,
                     }
 
-                     comments.push(answer);
+                     comments[indexAnswer].answers.push(answer);
                      saveComments();
-                     showAnswers();                     
+
+                     addAnswers.innerHTML = showAnswers(comments[indexAnswer].answers, userName)                   
                 })
             })   
-            
-            
-            
-            function showAnswers() {
-                comments.forEach(function(item, commentIndex) {
-                    let namePersonAnswer = document.querySelector(`.nameComments[data-index="${indexAnswer}"]`)
-                    outAnswer = ''
-                    outAnswer += `<div class = 'containerComments' data-index="${commentIndex}">
-                                <img class = 'photoComments' src="${item.photoAnswer}" width = "50px" height = "50px"></img>
-                                <div class = 'infoComments'>
-                                    <span class = 'nameComments'>${item.nameAnswer}</span>
-                                    <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
-                                    <span class = 'nameAnswer'>${namePersonAnswer.innerHTML}</span>
-                                    <span class = 'timeComments'>${timeConverter(item.timeAnswer)}</span>
-                                    <p class = 'messegeComments'>${item.messageAnswer}</p>
-                                    <div class = 'addComments' data-index="${commentIndex}">
-                                        <span class = 'favoritesComments'>
-                                            <img src="./img/in_favorite.svg" class = 'favoritesCommentsImg'></img>
-                                            <span class = 'favoritesCommentsText'>В избранное</span>
-                                        </span>
-                                        <span class = 'ratingComments'>
-                                            <img src="./img/minus.svg" class = 'ratingCommentsImg'></img>
-                                            <span class = 'ratingCommentsText'>0</span>
-                                            <img src="./img/plus.svg" class = 'ratingCommentsImg'></img>
-                                        </span>
-                                    </div>
-                                </div>                 
-                            </div>
-                            <div class = "answer"></div>`;
-
-                    addAnswers.innerHTML = outAnswer; 
-                            
-                })
-
-            }
+     
         }) 
         
     })
-
     
 }
-
-
