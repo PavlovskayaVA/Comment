@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+    </header>
+    <div class="container">
+        <aside class="aside">
+        </aside>
+        <main class="main-container">
+            <div class="item-small">
+                <div class="small-column">
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                </div>
+                <div class="small-column">
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                    <div class="item"></div>
+                </div>
+            </div>
+            <div class="item-big">
+            </div>
+            <div class="item-line"></div>
+            <div class="comment-nav">
+                <div class="nav-item">
+                    <div class="title-comment">Комментарии
+                        <span>(<span  class="num-comment">0</span>)</span>
+                    </div>
+                    <div class="comment-line"></div>
+                </div>
+                <div class="nav-item">
+                    <span class="title title-sort active">По количеству оценок</span>
+                    <span class="title title-sort">По дате</span>
+                    <span class="title title-sort">По актуальности</span>
+                    <span class="title title-sort">По количеству ответов</span>
+                    <img src="./img/arrow-down.svg" alt="arrow-down">
+                </div>
+                <div class="nav-item">
+                    <span class="title title-favorites">Избранное</span>
+                    <img src="./img/like.svg" alt="favorites">
+                </div>
+            </div>
+            <div class="comment-person">
+                <img alt="person-avatar" class="person-avatar"></img>
+                <div class="person-messege">
+                    <div class="name-symbol">
+                        <div class="name"></div>
+                        <span class="symbol symbol-inactive">Макс.1000 символов</span>
+                        <span class="symbol symbol-active"><span class = "symbol-active-number"></span>/1000</span>
+                        <span class="symbol symbol-error">Слишком длинное сообщение</span>
+                    </div>
+                    <div contenteditable="" class="message" placeholder="Введите текст сообщения..."></div>
+                </div>
+                <button class="button">Отправить</button>
+            </div>
+            <div class="comment-field"></div>
+        </main>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
