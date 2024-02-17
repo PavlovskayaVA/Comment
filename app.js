@@ -12,6 +12,7 @@ setInterval(maxCountSymbolAnswer, 100);
 
 let comments = [];
 let commentIndex = 0;
+let filterFavorite = false;
 
 loadComments();
 
@@ -33,6 +34,7 @@ function addCommentIndex() {
 
 function addComment() {
     saveCountComment();
+    saveSort();
     let comment = {
         photo: userPhoto, 
         name:  userName,
@@ -183,15 +185,16 @@ function showAnswers(answers, name,commentIndex) {
     })
     return addAnswersHTML
 }
-let favorite;
+
 
 //favorite
+let favorite;
+
 function inFavorite(element) {
     let commentIndex = element.dataset.parent;
     let answerIndex = element.dataset.index;
     let favoriteText;
     let favoriteImg;
-
 
     if (!answerIndex)  {
         comments[commentIndex].favorite = !comments[commentIndex].favorite;
@@ -256,30 +259,187 @@ document.addEventListener('click', function (event) {
 });
 
 //favoritePage
-//let containerComments = document.querySelectorAll('.containerComments') // получаем в переменную весь блок с комментарием
-
 let favoriteButton = document.querySelector('.title-favorites');
 favoriteButton.addEventListener('click', favoritePage)
 
 function favoritePage() {
-    comments.forEach(commentItem => { // проходимся по всем комментариям
-        if(commentItem.favorite == true) { // если какой-либо комментарий содержит "В избранном"
-            alert('1')
-            commentItem.classList.add("hideFalseFavorite"); // находим блок с комментарем с таким же индексом и скрываем блок
-        } else {
-            alert('2')
-            commentItem.classList.remove("hideFalseFavorite"); // показываем блок
+    filterFavorite = !filterFavorite;
+    comments.forEach((commentItem,index) => {
+        if (filterFavorite) {
+            let classFavorite = '';
+            if (commentItem.favorite !== true) {
+                classFavorite = 'hideFalseFavorite'
+                document.querySelector(`.containerComments[data-index="${index}"]`).classList.add(classFavorite)
+            }
+            document.querySelector(`.eventsComments[data-index="${index}"]`).classList.add('hideFalseFavorite'); 
+        } 
+        else {
+            document.querySelector(`.containerComments[data-index="${index}"]`).classList.remove('hideFalseFavorite');
+            document.querySelector(`.eventsComments[data-index="${index}"]`).classList.remove('hideFalseFavorite'); 
         }
-    })
+    })   
 }
 
-   
-    
+
+//sort
+let buttonSort = document.querySelector('.sort-choice');
+buttonSort.addEventListener('click', choiceSort)
+let buttonSortChoice = document.querySelector('.sort');
+let buttonSortMark = document.querySelector('.sort-mark');
+let buttonSortDate = document.querySelector('.sort-date');
+let buttonSortActual = document.querySelector('.sort-actual');
+let buttonSortAnswer = document.querySelector('.sort-answer');
+
+let filterSort = false;
 
 
 
+const titleSort = document.querySelector('.title-sort');
 
+function choiceSort() {
+    filterSort = !filterSort;
+    if (filterSort) {
+        buttonSortMark.classList.add('active'); 
+        buttonSortDate.classList.add('active'); 
+        buttonSortActual.classList.add('active'); 
+        buttonSortAnswer.classList.add('active'); 
+        buttonSortChoice.classList.remove('active');           
+    } else {
+        buttonSortMark.addEventListener('click', choiceSortMark)
+        buttonSortDate.addEventListener('click', choiceSortDate)
+        buttonSortActual.addEventListener('click', choiceSortActual)
+        buttonSortAnswer.addEventListener('click', choiceSortAnswer)
 
+        function choiceSortMark() {
+            buttonSortMark.classList.add('active'); 
+            buttonSortDate.classList.remove('active'); 
+            buttonSortActual.classList.remove('active'); 
+            buttonSortAnswer.classList.remove('active'); 
+            buttonSortChoice.classList.remove('active'); 
+            //buttonSortMark.innerHTML =  titleSort.innerHTML;
+            titleSort.innerHTML = 'По количеству оценок'; 
+            saveSort() 
+        }
+        function choiceSortDate() {
+            buttonSortMark.classList.remove('active'); 
+            buttonSortDate.classList.add('active'); 
+            buttonSortActual.classList.remove('active'); 
+            buttonSortAnswer.classList.remove('active');
+            buttonSortChoice.classList.remove('active');  
+            //buttonSortDate.innerHTML =  titleSort.innerHTML;
+            titleSort.innerHTML = 'По дате';
+            saveSort()
+        }
+        function choiceSortActual() {
+            buttonSortMark.classList.remove('active'); 
+            buttonSortDate.classList.remove('active'); 
+            buttonSortActual.classList.add('active'); 
+            buttonSortAnswer.classList.remove('active');
+            buttonSortChoice.classList.remove('active'); 
+            //buttonSortActual.innerHTML =  titleSort.innerHTML;
+            titleSort.innerHTML = 'По актуальности'; 
+            saveSort()  
+        }
+        function choiceSortAnswer() {
+            buttonSortMark.classList.remove('active'); 
+            buttonSortDate.classList.remove('active'); 
+            buttonSortActual.classList.remove('active'); 
+            buttonSortAnswer.classList.add('active'); 
+            buttonSortChoice.classList.remove('active'); 
+            //buttonSortAnswer.innerHTML =  titleSort.innerHTML;
+            titleSort.innerHTML = 'По количеству ответов'; 
+            saveSort() 
+        }
+    }
+}
 
+function saveSort() {
+    localStorage.setItem('titleSort', titleSort.innerHTML);  
+}
 
+if (localStorage.getItem('titleSort')) {
+    titleSort.innerHTML = localStorage.getItem('titleSort');
+} else {
+    localStorage.setItem('titleSort', titleSort.innerHTML); 
+}
+
+const changeState = document.querySelector('.change-state');
+const commentField = document.querySelector('.comment-field');
+
+let transformState = false;
+
+changeState.addEventListener('click', sortByDay);
+buttonSortDate.addEventListener('click', sortByDay);
+buttonSortActual.addEventListener('click', sortByDay);
+
+function sortByDay(event) {
+    const target = event.target;
+
+    if (titleSort.innerHTML == 'По дате' || titleSort.innerHTML == 'По актуальности') {
+        transformState = !transformState;
+        const commentsRaiting = comments.slice();
+        if (transformState) {
+            changeState.style.transform = 'rotate(360deg)';
+            commentsRaiting.sort((a, b) => a.time - b.time);
+            commentField.innerHTML = '';
+            commentsRaiting.forEach((comment, commentIndex) => {
+                commentField.innerHTML += `<div class = 'containerComments' data-index="${commentIndex}">
+                                                <img class = 'photoComments' src="${comment.photo}" width = "50px" height = "50px"></img>
+                                                <div class = 'infoComments'>
+                                                    <span class = 'nameComments' data-index="${commentIndex}">${comment.name}</span>
+                                                    <span class = 'timeComments'>${timeConverter(comment.time)}</span>
+                                                    <p class = 'messegeComments'>${comment.message}</p>
+                                                    <span class = 'answerComments'>
+                                                        <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
+                                                        <span class = 'answerCommentsText' data-index="${commentIndex}">Ответить</span>
+                                                    </span>
+                                                    <span class = 'favoritesComments'>
+                                                    <img class = 'favoritesCommentsImg' data-parent="${commentIndex}" src="${comment.favorite ? './img/in_favorite.svg' : './img/favorite.svg'}"></img>
+                                                    <span class = 'favoritesCommentsText' data-parent="${commentIndex}">${comment.favorite ? 'В избранном' : 'В избранное'}</span>
+                                                    </span>
+                                                    <span class = 'ratingComments'>
+                                                        <img src="./img/minus.svg" class = 'ratingCommentsImg rating-minus' data-parent="${commentIndex}"></img>
+                                                        <span class = 'ratingCommentsText' data-parent="${commentIndex}">${comment.rating}</span>
+                                                        <img src="./img/plus.svg" class = 'ratingCommentsImg rating-plus' data-parent="${commentIndex}"></img>
+                                                    </span>
+                                                    <div class = 'eventsComments' data-index="${commentIndex}">${showAnswers(comment.answers, comment.name,commentIndex)}
+                                                        <div class = "userAnswer" data-index="${commentIndex}"></div>
+                                                    </div>
+                                                </div>            
+                                            </div>`;  
+            })
+        } else {
+            changeState.style.transform = 'rotate(180deg)';
+            commentsRaiting.sort((a, b) => b.time - a.time);
+            commentField.innerHTML = '';
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += `<div class = 'containerComments' data-index="${commentIndex}">
+                                                <img class = 'photoComments' src="${comment.photo}" width = "50px" height = "50px"></img>
+                                                <div class = 'infoComments'>
+                                                    <span class = 'nameComments' data-index="${commentIndex}">${comment.name}</span>
+                                                    <span class = 'timeComments'>${timeConverter(comment.time)}</span>
+                                                    <p class = 'messegeComments'>${comment.message}</p>
+                                                    <span class = 'answerComments'>
+                                                        <img src="./img/answer.svg" class = 'answerCommentsImg'></img>
+                                                        <span class = 'answerCommentsText' data-index="${commentIndex}">Ответить</span>
+                                                    </span>
+                                                    <span class = 'favoritesComments'>
+                                                    <img class = 'favoritesCommentsImg' data-parent="${commentIndex}" src="${comment.favorite ? './img/in_favorite.svg' : './img/favorite.svg'}"></img>
+                                                    <span class = 'favoritesCommentsText' data-parent="${commentIndex}">${comment.favorite ? 'В избранном' : 'В избранное'}</span>
+                                                    </span>
+                                                    <span class = 'ratingComments'>
+                                                        <img src="./img/minus.svg" class = 'ratingCommentsImg rating-minus' data-parent="${commentIndex}"></img>
+                                                        <span class = 'ratingCommentsText' data-parent="${commentIndex}">${comment.rating}</span>
+                                                        <img src="./img/plus.svg" class = 'ratingCommentsImg rating-plus' data-parent="${commentIndex}"></img>
+                                                    </span>
+                                                    <div class = 'eventsComments' data-index="${commentIndex}">${showAnswers(comment.answers, comment.name,commentIndex)}
+                                                        <div class = "userAnswer" data-index="${commentIndex}"></div>
+                                                    </div>
+                                                </div>            
+                                            </div>`;  
+            })
+        }
+    }
+
+}
 
